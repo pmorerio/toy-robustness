@@ -30,7 +30,7 @@ sess = tf.InteractiveSession()
 # Model
 num_classes = 3
 l_rate_min = 0.001
-l_rate_max = 1.0
+l_rate_max = 0.01
 
 _x = tf.placeholder(tf.float32, shape=[None, 2]) 
 _y = tf.placeholder(tf.int64, shape=[None])
@@ -77,9 +77,9 @@ _pred2 = tf.argmax(_logits2, 1)
 
 tf.global_variables_initializer().run()
 
-T_adv = 10 # number of SGA steps before running a SGD step
+T_adv = 5 # number of SGA steps before running a SGD step
 
-for i in range(1000):
+for i in range(20000):
     
     points, labels = data_handler.next_batch()
     feed_dict = {_x:points, _y:labels}
@@ -87,14 +87,16 @@ for i in range(1000):
     sess.run(_x_hat_assign_op, feed_dict=feed_dict)
         
     for t in range(T_adv):
-	sess.run(_max_train_op, feed_dict=feed_dict)
+	_, max_l = sess.run([_max_train_op,_max_loss], feed_dict=feed_dict)
+	#~ print max_l
 		
     feed_dict[_x] = sess.run(_x_hat, feed_dict=feed_dict)
         
     sess.run(_min_train_op, feed_dict=feed_dict)
     
-    xentr, acc = sess.run([_min_loss, _accuracy], feed_dict)
-    print('Iter', i, 'Loss:', str(xentr), 'Acc:', str(acc))
+    if i%100==0:
+	xentr, acc = sess.run([_min_loss, _accuracy], feed_dict)
+	print('Iter', i, 'Loss:', str(xentr), 'Acc:', str(acc))
     
 
 acc_test = sess.run(_accuracy, feed_dict={_x:data_handler.x_test, _y:data_handler.y_test})
