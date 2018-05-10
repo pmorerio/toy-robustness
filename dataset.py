@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 
 class toyDataSet(object):
     
-    def __init__(self,r_train = 1.5,r_test = 5.0, base_size=1000):
+    def __init__(self,r_train = 1.5,r_test = 5.0, base_size=1000, batch_size=128):
 	
 	npr.seed(1234)
 	assert r_train < r_test
 	self.r_train=r_train
 	self.r_test=r_test
 	self.base_size=base_size
+	self.batch_size=batch_size
 	 
 	self.mean_0 = np.array([-5, 0])
 	self.cov_0 = np.array([[4, 0], [0, 4.]])
@@ -55,9 +56,9 @@ class toyDataSet(object):
 	self.x_test = self.x_test[perm]
 	self.y_test = self.y_test[perm]
     
-    def next_batch(self, batch_size = 128):
+    def next_batch(self):
 	start = self._index_in_epoch
-	self._index_in_epoch += batch_size
+	self._index_in_epoch += self.batch_size
 	if self._index_in_epoch > self._num_train_examples:
 	    # Finished epoch
 	    self._epochs_completed += 1
@@ -68,8 +69,8 @@ class toyDataSet(object):
 	    self.y_train = self.y_train[perm]
 	    # Start next epoch
 	    start = 0
-	    self._index_in_epoch = batch_size
-	    assert batch_size <= self._num_train_examples
+	    self._index_in_epoch = self.batch_size
+	    assert self.batch_size <= self._num_train_examples
 	end = self._index_in_epoch
 	return self.x_train[start:end], self.y_train[start:end]
 	
