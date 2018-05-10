@@ -42,7 +42,7 @@ _h3 = slim.fully_connected(_h2, 2, activation_fn=tf.nn.relu, scope='hidden3')
 _logits = slim.fully_connected(_h3, num_classes, activation_fn=None,scope='logits')
 
 
-_x_hat = tf.get_variable('x_hat', [128, 2]) # 128 is the size of the dataset, should be a variable! 
+_x_hat = tf.get_variable('x_hat', [data_handler.batch_size, 2]) # 128 is the size of the dataset, should be a variable! 
 _x_hat_assign_op = _x_hat.assign(_x) # to assign a value to the variable
 
 _h1_hat = slim.fully_connected(_x_hat, 5, activation_fn=tf.nn.relu,  scope='hidden1', reuse=True)
