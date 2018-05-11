@@ -22,7 +22,7 @@ def plot_decision_boundary(pred_func, X, y, counter, save=True):
     #~ plt.show()
     if save:
         #~ fig = plt.figure()
-        plt.savefig(str(counter), bbox_inches='tight')
+        plt.savefig('pics/image-%05d' % counter, bbox_inches='tight')
         plt.close() # avoid memory leak
         
 
@@ -69,22 +69,22 @@ for i in range(20000):
     feed_dict = {_x:points, _y:labels}
     sess.run(_train_step, feed_dict=feed_dict)
     
-    if i %10 == 0 or i == 0:
-        xentr, acc = sess.run([_loss, _accuracy], feed_dict)
-        print('Iter', i, 'Loss:', str(xentr), 'Acc:', str(acc))
-        
-        
-        #~ plot_decision_boundary(prediction_func,data_handler.x_train, data_handler.y_train,0 )
-        plot_decision_boundary(prediction_func,data_handler.x_test, data_handler.y_test, i )
+    #~ if i %2 == 0 or i == 0:
+    xentr, acc = sess.run([_loss, _accuracy], feed_dict)
+    print('Iter', i, 'Loss:', str(xentr), 'Acc:', str(acc))
+    
+    
+    #~ plot_decision_boundary(prediction_func,data_handler.x_train, data_handler.y_train,0 )
+    plot_decision_boundary(prediction_func,data_handler.x_test, data_handler.y_test, i )
 
-        #~ h3 = sess.run(_h3, feed_dict={_x:data_handler.x_train})
-        #~ plot_decision_boundary(prediction_func2,h3, data_handler.y_train,2 )
-        #~ h3 = sess.run(_h3, feed_dict={_x:data_handler.x_test})
-        #~ plot_decision_boundary(prediction_func2,h3, data_handler.y_test,3 )
-        
+    #~ h3 = sess.run(_h3, feed_dict={_x:data_handler.x_train})
+    #~ plot_decision_boundary(prediction_func2,h3, data_handler.y_train,2 )
+    #~ h3 = sess.run(_h3, feed_dict={_x:data_handler.x_test})
+    #~ plot_decision_boundary(prediction_func2,h3, data_handler.y_test,3 )
+    
 
-        acc_test = sess.run(_accuracy, feed_dict={_x:data_handler.x_test, _y:data_handler.y_test})
-        print('Test Acc:', str(acc_test))
+    #~ acc_test = sess.run(_accuracy, feed_dict={_x:data_handler.x_test, _y:data_handler.y_test})
+    #~ print('Test Acc:', str(acc_test))
 
 
 
